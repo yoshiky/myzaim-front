@@ -33,3 +33,43 @@ selectedHistories.value.push(props.history.id);
     </div>
   </div>
 </template>
+
+
+<style scoped>
+.list-inner-container {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Noto Sans JP', sans-serif
+}
+.list-inner-container-right {
+  margin: 5px;
+}
+.list-inner-container-left {
+  margin-right: 20px;
+  margin-left: auto;
+}
+.list-bottom {
+  background-color: aliceblue;
+  border-radius: 3px;
+}
+.p-comment {
+  margin: 0px;
+  padding: 5px;
+  font-size: 12px;
+}
+.list-amount {
+  font-size: 20px;
+  margin-right: 0;
+  margin-left: auto;
+  width: 60%;
+  text-align: right;
+  display: inline-block;
+}
+.list-date {
+  font-size: 13px;
+}
+.list-genre {
+  margin: 0px;
+  font-size: 13px;
+}
+</style>

@@ -1,23 +1,21 @@
 /* eslint-disable no-console */
 <script setup lang="ts">
-import { ref, reactive, provide, watch, computed, InjectionKey } from 'vue';
+import { ref, reactive, provide, watch, computed, InjectionKey, h } from 'vue';
 import axios from 'axios';
 import Item from './components/Item.vue';
-import { fetchHistories, histories, historyKey, selectedHistories } from './cardpayHistory';
+import { cardpayHistory, fetchHistories, histories, historyKey, selectedHistories } from './cardpayHistory';
 
 type optionDate = {
   startDate: string,
   endDate: string
 }
 
-// const selectedHistories = ref<number[]>([]);
-// provide('selectedHistories', selectedHistories);
-
 provide(historyKey, selectedHistories);
 
 const targetDate = ref<string>('');
 const isfixedcost = ref(false);
 
+// TODO: ここcomputedじゃなくmethodでもいい？
 const dateSelectOptions = computed(() => {
   // 開始年月(2021年10月)
   const startDate = new Date(2021,8);
@@ -55,24 +53,27 @@ const _zeroPadding = (month: number, digit: number): string => {
   return ('0' + month).slice(d);
 }
 
+const sumAmount = computed(() => {
+  return histories.value?.reduce(
+    (prev: number, current: cardpayHistory): number => prev + (selectedHistories.value.includes(current.id)? current.amount : 0)
+    ,0
+  );
+})
+
 </script>
 
 <template>
   <div id="app">
-    <div>{{ selectedHistories }}</div>
     <h2>Monthly Billing of CreditCard</h2>
-    <p>合計: {{  }}</p>
-    <div>
-      <select name="date" id="date" v-model="targetDate">
-        <option v-for="option in dateSelectOptions" :key="option.text" :value="option.value">
-            {{ option.text }}
-        </option>
-      </select>
-      <button @click="fetchHistories(targetDate)">SHOW</button>
-      <div v-show="histories">
-        <input type="radio" name="is-fixed-cost" id="fc-fca" v-model="isfixedcost" value="all"><label for="fc-fca">全て</label>
-        <input type="radio" name="is-fixed-cost" id="fc-fcy" v-model="isfixedcost" value="固定費" ><label for="fc-fcy">固定費</label>
-        <input type="radio" name="is-fixed-cost" id="fc-fcn" v-model="isfixedcost" value="" ><label for="fc-fcn">固定費以外</label>
+    <div class="header">
+      <p>合計: {{ sumAmount?.toLocaleString() }} 円</p>
+      <div>
+        <select name="date" id="date" v-model="targetDate">
+          <option v-for="option in dateSelectOptions" :key="option.text" :value="option.value">
+              {{ option.text }}
+          </option>
+        </select>
+        <button @click="fetchHistories(targetDate)">SHOW</button>
       </div>
     </div>
     <ul>
@@ -83,6 +84,50 @@ const _zeroPadding = (month: number, digit: number): string => {
   </div>
 </template>
 
-<style>
-
+<style scoped>
+.header {
+  position: sticky;
+  top: 10px;
+  z-index: 3;
+  background-color: white;
+  opacity: 0.9;
+}
+  ul {
+    padding: 0px;
+  }
+  .money-list {
+    list-style-type: none;
+    background-color: #B8E9FE;
+    background: linear-gradient(#83d4fb, #B8EAC0);
+    border-radius: 10px;
+    margin: 10px 15px;
+    padding: 2px 5px 5px;
+  }
+  .list-inner-container {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Noto Sans JP', sans-serif
+  }
+  .list-inner-container-right {
+    margin: 5px;
+  }
+  .list-bottom {
+    background-color: aliceblue;
+    border-radius: 3px;
+  }
+  .p-comment {
+    margin: 0px;
+    padding: 5px;
+    font-size: 12px;
+  }
+  .list-amount {
+    font-size: 20px;
+  }
+  .list-date {
+    font-size: 13px;
+  }
+  .list-genre {
+    margin: 0px;
+    font-size: 13px;
+  }
 </style>
