@@ -41,9 +41,6 @@ selectedHistories.value.push(props.history.id);
     justify-content: space-between;
     font-family: 'Noto Sans JP', sans-serif
 }
-.list-inner-container-right {
-  margin: 5px;
-}
 .list-inner-container-left {
   margin-right: 20px;
   margin-left: auto;

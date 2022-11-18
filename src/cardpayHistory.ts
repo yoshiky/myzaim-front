@@ -34,7 +34,7 @@ const fetchHistories = async (dt: string) => {
   const endDate: string = _format(_getEndDate(dt));
   
   // zaimからデータを取得
-  const response = await axios.get(`https://myzaim.herokuapp.com/zaim/creditcard?mapping=1&start_date=${startDate}&end_date=${endDate}`);
+  const response = await axios.get(`${import.meta.env.VITE_ZAIMAPI}?start_date=${startDate}&end_date=${endDate}`);
   histories.value = response.data;
 
   // 年月を切り替えるたびに追加されていくので、選択中historyを空にする
