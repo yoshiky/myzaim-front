@@ -3,17 +3,12 @@
 import { ref, reactive, provide, watch, computed, InjectionKey, h } from 'vue';
 import axios from 'axios';
 import Item from './components/Item.vue';
-import { cardpayHistory, fetchHistories, histories, historyKey, selectedHistories } from './cardpayHistory';
-
-type optionDate = {
-  startDate: string,
-  endDate: string
-}
+import Loading from './components/Loading.vue';
+import { cardpayHistory, fetchHistories, histories, historyKey, selectedHistories, isLoading } from './cardpayHistory';
 
 provide(historyKey, selectedHistories);
 
 const targetDate = ref<string>('');
-const isfixedcost = ref(false);
 
 // TODO: ここcomputedじゃなくmethodでもいい？
 const dateSelectOptions = computed(() => {
@@ -76,6 +71,7 @@ const sumAmount = computed(() => {
         <button @click="fetchHistories(targetDate)">SHOW</button>
       </div>
     </div>
+    <loading v-if="isLoading"></loading>
     <ul>
       <li class="money-list" v-for="history in histories" :key="history.id">
         <item :history=history />

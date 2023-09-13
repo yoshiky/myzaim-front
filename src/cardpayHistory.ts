@@ -26,7 +26,11 @@ const histories =  ref<cardpayHistory[]>();
  * Zaimからデータを取得
  * @param {string} dt 取得対象の年月(yyyymm形式)
  */
-const fetchHistories = async (dt: string) => { 
+const fetchHistories = async (dt: string) => {
+
+  // Loadingアイコン表示
+  isLoading.value = true;
+
   // リクエストパラメタの構築
   const yyyy: number = Number(dt.substring(0,4));
   const mm: number = Number(dt.substring(4,6));
@@ -39,6 +43,7 @@ const fetchHistories = async (dt: string) => {
 
   // 年月を切り替えるたびに追加されていくので、選択中historyを空にする
   selectedHistories.value.splice(0);
+  isLoading.value = false;
 }
 
 /**
@@ -72,5 +77,8 @@ const selectedHistories = ref<number[]>([]);
 type historyType = typeof selectedHistories;
 const historyKey: InjectionKey<historyType> = Symbol('history');
 
-export { fetchHistories, histories, historyKey, selectedHistories };
+// loadingアイコン表示制御
+const isLoading = ref<boolean>(false);
+
+export { fetchHistories, histories, historyKey, selectedHistories, isLoading };
 export type { cardpayHistory };
